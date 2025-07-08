@@ -23,5 +23,4 @@ const AppRoutes = () => {
   );
 };
 
-// Exportation du composant AppRoutes pour l'utiliser dans d'autres parties de l'application
 export default AppRoutes;
