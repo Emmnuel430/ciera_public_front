@@ -17,10 +17,10 @@ const AppRoutes = () => {
 
         {/* 2️⃣ Route dynamique pour toutes les pages CMS via slug */}
         <Route path="/:slug" element={<Page />} />
+        {/* 404 si la page n'est pas reconnue */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
 };
-
 export default AppRoutes;
