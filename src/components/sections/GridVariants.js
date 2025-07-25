@@ -237,6 +237,8 @@ export const GridSplit = ({ section }) => {
 };
 
 export const GridSplitDark = ({ section }) => {
+  const imageUrl = `${process.env.REACT_APP_API_BASE_URL_STORAGE}/${section.image}`;
+  const isVideo = /\.(mp4|webm|ogg)$/i.test(section.image);
   return (
     <section className="py-16 px-6 md:px-12 bg-white text-gray-800">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -253,13 +255,23 @@ export const GridSplitDark = ({ section }) => {
               {section.content}
             </p>
           )}
-          {section.image && (
-            <img
-              src={`${process.env.REACT_APP_API_BASE_URL_STORAGE}/${section.image}`}
-              alt={section.title}
-              className="mb-6 w-full h-80 object-contain rounded shadow"
-            />
-          )}
+          {section.image &&
+            (isVideo ? (
+              <video
+                src={imageUrl}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="mb-6 w-full h-80 object-contain rounded shadow"
+              />
+            ) : (
+              <img
+                src={imageUrl}
+                alt={section.title}
+                className="mb-6 w-full h-80 object-contain rounded shadow"
+              />
+            ))}
           {section.button_text && section.button_link && (
             <a
               href={section.button_link}
