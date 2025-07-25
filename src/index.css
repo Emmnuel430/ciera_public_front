@@ -133,6 +133,14 @@ h3 {
   /* border: 2px solid #fff; */
 }
 
+.product-carousel .swiper-pagination-bullet {
+  background-color: #c45f01 !important; /* bg-green-500 */
+  width: 2rem !important;
+  height: 0.5rem !important;
+  border: 2px solid #fff;
+  border-radius: 0;
+}
+
 .home__image {
   border-spacing: 8px;
   border-style: dotted;

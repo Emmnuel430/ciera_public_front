@@ -2,6 +2,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import { useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { useSecureFetch } from "../../utils/useSecureFetch";
 // -----------
 
 export function HeroDefault({ section }) {
@@ -467,6 +470,251 @@ export function HeroInfoInverse({ section }) {
               alt={section.title || "Image"}
               className="w-full rounded shadow"
             />
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+// ----------------------------------
+// Ecom Components
+// ----------------------------------
+
+// HERO AVEC FILTRES
+// export function HeroWithFilters({ section }) {
+//   const [filters, setFilters] = useState({
+//     type: "",
+//     categorie: "",
+//     brand: "",
+//   });
+//   const [produits, setProduits] = useState([]);
+
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     const fetchProduits = async () => {
+//       const res = await fetch(
+//         `${process.env.REACT_APP_API_BASE_URL}/produits-public/light`
+//       );
+//       const data = await res.json();
+//       setProduits(data.produits);
+//     };
+//     fetchProduits();
+//   }, []);
+
+//   const types = useMemo(() => {
+//     const map = {};
+//     produits.forEach((p) => {
+//       if (p.type && !map[p.type.id]) {
+//         map[p.type.id] = p.type;
+//       }
+//     });
+//     return Object.values(map);
+//   }, [produits]);
+
+//   const categories = useMemo(() => {
+//     const map = {};
+//     produits.forEach((p) => {
+//       if (
+//         p.categorie &&
+//         (!filters.type || p.categorie.type_id === parseInt(filters.type))
+//       ) {
+//         map[p.categorie.id] = p.categorie;
+//       }
+//     });
+//     return Object.values(map);
+//   }, [produits, filters.type]);
+
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     setFilters((prev) => ({ ...prev, [name]: value }));
+//   };
+
+//   const goToCatalogue = () => {
+//     const query = new URLSearchParams(filters).toString();
+//     navigate(`/boutique/catalogue?${query}`);
+//   };
+//   return (
+//     <section
+//       className="relative h-[80vh] flex items-center px-6 md:px-12 text-white"
+//       style={{
+//         backgroundImage: section.image
+//           ? `url(${process.env.REACT_APP_API_BASE_URL_STORAGE}/${section.image})`
+//           : "none",
+//         backgroundSize: "cover",
+//         backgroundPosition: "center",
+//       }}
+//     >
+//       <div className="absolute inset-0 bg-black/50 z-0" />
+//       <div className="relative z-10 w-full max-w-6xl mx-auto text-center">
+//         <h1 className="text-4xl font-bold mb-6">{section.title}</h1>
+//         <div className="bg-white/90 rounded-xl p-4 md:p-6 flex flex-wrap gap-4 justify-center items-center shadow-lg w-full mx-auto">
+//           <select
+//             name="type"
+//             onChange={handleChange}
+//             value={filters.type}
+//             className="py-2 rounded border text-black border-gray-700 px-5 flex-1 min-w-[140px]"
+//           >
+//             <option value="">Tous les types</option>
+//             {types.map((type) => (
+//               <option key={type.id} value={type.id}>
+//                 {type.libelle}
+//               </option>
+//             ))}
+//           </select>
+
+//           <select
+//             name="categorie"
+//             onChange={handleChange}
+//             value={filters.categorie}
+//             className="py-2 rounded border text-black border-gray-700 px-5 flex-1 min-w-[140px]"
+//             disabled={!filters.type}
+//           >
+//             <option value="">Toutes les Catégories</option>
+//             {categories.map((cat) => (
+//               <option key={cat.id} value={cat.id}>
+//                 {cat.nom}
+//               </option>
+//             ))}
+//           </select>
+
+//           <button
+//             className="bg-orange-600 text-white px-4 py-2 rounded"
+//             onClick={goToCatalogue}
+//           >
+//             Recherchez
+//           </button>
+//         </div>
+//       </div>
+//     </section>
+//   );
+// }
+
+// AsNumeric
+export function HeroWithFilters({ section }) {
+  const [filters, setFilters] = useState({
+    type_unit: "",
+    categorie: "",
+    brand: "",
+  });
+
+  const navigate = useNavigate();
+
+  const { db, loading } = useSecureFetch("product");
+
+  const produits = useMemo(() => db.data || [], [db]);
+
+  const typeUnits = useMemo(() => {
+    const set = new Set();
+    produits.forEach((p) => {
+      if (p.type_unit) set.add(p.type_unit);
+    });
+    return Array.from(set);
+  }, [produits]);
+
+  const categories = useMemo(() => {
+    const map = {};
+    produits.forEach((p) => {
+      if (p.category) {
+        map[p.category] = p.category;
+      }
+    });
+    return Object.values(map);
+  }, [produits]);
+
+  const produitsFiltres = useMemo(() => {
+    return produits.filter((p) => {
+      const matchType = !filters.type_unit || p.type_unit === filters.type_unit;
+      const matchCat = !filters.categorie || p.category === filters.categorie;
+      return matchType && matchCat;
+    });
+  }, [produits, filters]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const goToCatalogue = () => {
+    const query = new URLSearchParams();
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) query.set(key, value);
+    });
+
+    navigate(`/boutique/catalogue?${query.toString()}`);
+  };
+
+  const capitalize = (text) => {
+    return text.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase()); // Majuscule 1ère lettre de chaque mot
+  };
+
+  return (
+    <section
+      className="relative h-[80vh] flex items-center px-6 md:px-12 text-white"
+      style={{
+        backgroundImage: section.image
+          ? `url(${process.env.REACT_APP_API_BASE_URL_STORAGE}/${section.image})`
+          : "none",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="absolute inset-0 bg-black/50 z-0" />
+      <div className="relative z-10 w-full max-w-6xl mx-auto text-center">
+        <h1 className="text-4xl font-bold mb-6">{section.title}</h1>
+        {loading ? (
+          // ✅ Skeleton loading
+          <div className="bg-white/90 rounded-xl p-4 md:p-6 flex flex-wrap gap-4 justify-center items-center shadow-lg w-full mx-auto animate-pulse">
+            <div className="h-10 bg-gray-300 rounded w-[140px]"></div>
+            <div className="h-10 bg-gray-300 rounded w-[140px]"></div>
+            <div className="h-6 bg-gray-300 rounded w-1/2"></div>
+            <div className="h-10 bg-gray-300 rounded w-32"></div>
+          </div>
+        ) : (
+          // ✅ Version normale une fois chargée
+          <div className="bg-white/90 rounded-xl p-4 md:p-6 flex flex-wrap gap-4 justify-center items-center shadow-lg w-full mx-auto">
+            <select
+              name="type_unit"
+              onChange={handleChange}
+              value={filters.type_unit}
+              className="py-2 rounded border text-black border-gray-700 px-5 flex-1 min-w-[140px]"
+            >
+              <option value="">Tous les types</option>
+              {typeUnits.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
+
+            <select
+              name="categorie"
+              onChange={handleChange}
+              value={filters.categorie}
+              className="py-2 rounded border text-black border-gray-700 px-5 flex-1 min-w-[140px]"
+            >
+              <option value="">Toutes les catégories</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {capitalize(cat)}
+                </option>
+              ))}
+            </select>
+
+            <p className="text-black font-semibold w-full text-center">
+              {produitsFiltres.length} produit
+              {produitsFiltres.length > 1 ? "s" : ""} trouvé
+              {produitsFiltres.length > 1 ? "s" : ""}
+            </p>
+
+            <button
+              className="bg-orange-600 text-white px-4 py-2 rounded"
+              onClick={goToCatalogue}
+            >
+              Recherchez
+            </button>
           </div>
         )}
       </div>
