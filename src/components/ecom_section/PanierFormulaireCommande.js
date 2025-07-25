@@ -188,6 +188,7 @@ function PanierFormulaireCommande({ totalItems, totalPrice, cart, showToast }) {
       const total = item.price * item.quantity;
 
       produits += `${index + 1}. ${item.name}\n`;
+      produits += `   Ref : ${item.sku}\n`;
       produits += `   Quantité : ${item.quantity}\n`;
       produits += `   Total : ${total.toLocaleString()} FCFA\n\n`;
     });

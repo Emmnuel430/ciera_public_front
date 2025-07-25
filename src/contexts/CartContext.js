@@ -128,6 +128,7 @@ export function CartProvider({ children }) {
         {
           product_id: product.product_id,
           name: product.name,
+          sku: product.sku,
           image_url: product.image_url,
           price: product.variations?.[0]?.purchase_price || 0,
           quantity: 1,
