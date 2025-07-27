@@ -40,7 +40,11 @@ function LayoutPublic({ children }) {
   }, []);
 
   const links = pages
-    .filter((page) => !page.template.includes("ecom"))
+    .filter(
+      (page) =>
+        !page.template.includes("ecom") &&
+        !page.template.includes("avec_sidebar_rdv")
+    )
     .map((page) => ({
       label: page.title,
       to: `/${page.slug}`,
@@ -56,6 +60,8 @@ function LayoutPublic({ children }) {
   ];
 
   const isBoutique = location.pathname.startsWith("/boutique");
+
+  const isActive = location.pathname === "/prendre-rdv";
 
   return (
     <>
@@ -149,6 +155,21 @@ function LayoutPublic({ children }) {
                     </li>
                   ))}
                   <Link
+                    to="/prendre-rdv"
+                    className={`nav-link transition duration-300 px-4 py-2 rounded-md font-bold flex items-center gap-2 ${
+                      isActive
+                        ? "bg-green-700 text-white"
+                        : "bg-orange-800 text-white hover:bg-orange-700"
+                    }`}
+                  >
+                    <i
+                      className={`${
+                        isActive ? "ri-calendar-check-line" : "ri-calendar-line"
+                      } text-lg`}
+                    ></i>
+                    Prendre RDV
+                  </Link>
+                  <Link
                     to="/boutique"
                     className="nav-link transition duration-300 px-4 py-2 rounded-md bg-orange-800 text-white font-bold hover:bg-orange-700"
                   >
@@ -199,6 +220,23 @@ function LayoutPublic({ children }) {
                         </Link>
                       </li>
                     ))}
+                    <Link
+                      to="/prendre-rdv"
+                      className={`nav-link transition duration-300 px-4 py-2 rounded-md font-bold flex items-center gap-2 ${
+                        isActive
+                          ? "bg-green-700 text-white"
+                          : "bg-orange-800 text-white hover:bg-orange-700"
+                      }`}
+                    >
+                      <i
+                        className={`${
+                          isActive
+                            ? "ri-calendar-check-line"
+                            : "ri-calendar-line"
+                        } text-lg`}
+                      ></i>
+                      Prendre RDV
+                    </Link>
                     <Link
                       to="/boutique"
                       className="nav-link transition duration-300 px-4 py-2 rounded-md bg-orange-800 text-white font-bold hover:bg-orange-700"

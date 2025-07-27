@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { CheckboxGroup } from "./CheckboxGroup";
+import FloatingInputField from "./FloatingInputField";
+
 import emailjs from "@emailjs/browser";
 
 export default function FormRDV({ showToast }) {
@@ -147,6 +149,30 @@ export default function FormRDV({ showToast }) {
   oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
   const formattedMax = formatDate(oneYearLater);
 
+  const clientFields = [
+    { label: "Nom", name: "client_nom", type: "text", required: true },
+    { label: "Prénom", name: "client_prenom", type: "text", required: true },
+    { label: "Email", name: "client_email", type: "email", required: true },
+    { label: "Téléphone", name: "client_tel", type: "tel" },
+  ];
+
+  const vehiculeFields = [
+    { label: "Immatriculation", name: "immat", required: true },
+    { label: "Marque", name: "marque", required: true },
+    { label: "Modèle", name: "modele", required: true },
+    {
+      label: "Date de mise en circulation",
+      name: "premiere_mise_en_circulation",
+      type: "date",
+      max: formattedNow2,
+    },
+    {
+      label: "Kilométrage",
+      name: "kilometrage",
+      type: "number",
+    },
+  ];
+
   return (
     <form
       className="bg-green-800 text-white p-6 rounded-xl shadow-md space-y-8"
@@ -157,94 +183,37 @@ export default function FormRDV({ showToast }) {
       </h2>
 
       {/* Étape 1 */}
-      <fieldset className="space-y-4">
-        <legend className="text-xl text-center text-orange-600 mb-2">
+      <fieldset className="space-y-6">
+        <legend className="text-xl text-center font-semibold mb-4">
           1. Vos infos
         </legend>
-        <input
-          type="text"
-          name="client_nom"
-          value={formData.client_nom}
-          onChange={handleInputChange}
-          placeholder="Nom"
-          className="w-full border p-2 rounded"
-        />
-        <input
-          type="text"
-          name="client_prenom"
-          value={formData.client_prenom}
-          onChange={handleInputChange}
-          placeholder="Prénom"
-          className="w-full border p-2 rounded"
-        />
-        <input
-          type="email"
-          name="client_email"
-          value={formData.client_email}
-          onChange={handleInputChange}
-          placeholder="Email"
-          className="w-full border p-2 rounded"
-        />
-        <input
-          type="tel"
-          name="client_tel"
-          value={formData.client_tel}
-          onChange={handleInputChange}
-          placeholder="Téléphone"
-          className="w-full border p-2 rounded"
-        />
+        {clientFields.map((field) => (
+          <FloatingInputField
+            key={field.name}
+            {...field}
+            value={formData[field.name]}
+            onChange={handleInputChange}
+          />
+        ))}
       </fieldset>
 
-      {/* Étape 2 */}
-      <fieldset className="space-y-4">
-        <legend className="text-xl text-center text-orange-600 mb-2">
+      <fieldset className="space-y-6">
+        <legend className="text-xl text-center font-semibold mb-4">
           2. Véhicule
         </legend>
-        <input
-          type="text"
-          name="immat"
-          value={formData.immat}
-          onChange={handleInputChange}
-          placeholder="Plaque d'immatriculation"
-          className="w-full border p-3 text-xl font-medium tracking-wide rounded"
-        />
-        <input
-          type="text"
-          name="marque"
-          value={formData.marque}
-          onChange={handleInputChange}
-          placeholder="Marque"
-          className="w-full border p-2 rounded"
-        />
-        <input
-          type="text"
-          name="modele"
-          value={formData.modele}
-          onChange={handleInputChange}
-          placeholder="Modèle"
-          className="w-full border p-2 rounded"
-        />
-        <input
-          type="date"
-          name="premiere_mise_en_circulation"
-          value={formData.premiere_mise_en_circulation}
-          max={formattedNow2}
-          onChange={handleInputChange}
-          className="w-full border p-2 rounded"
-        />
-        <input
-          type="number"
-          name="kilometrage"
-          value={formData.kilometrage}
-          onChange={handleInputChange}
-          placeholder="Kilométrage"
-          className="w-full border p-2 rounded"
-        />
+        {vehiculeFields.map((field) => (
+          <FloatingInputField
+            key={field.name}
+            {...field}
+            value={formData[field.name]}
+            onChange={handleInputChange}
+          />
+        ))}
       </fieldset>
 
       {/* Étape 3 */}
       <fieldset className="space-y-4">
-        <legend className="text-xl text-center text-orange-600 mb-2">
+        <legend className="text-xl text-center font-semibold mb-2">
           3. Objet du RDV
         </legend>
         <CheckboxGroup
@@ -259,22 +228,47 @@ export default function FormRDV({ showToast }) {
           onChange={handleInputChange}
           rows="5"
           placeholder="Commentaires"
-          className="w-full border p-2 rounded"
+          className="w-full border p-2 rounded bg-white/90 text-black"
         />
       </fieldset>
 
       {/* Date RDV */}
       <div>
-        <label className="block mb-1 font-semibold">Date souhaitée</label>
+        <label className="block mb-1 font-semibold">Date souhaitée *</label>
         <input
           type="datetime-local"
           name="date_prise_rdv"
+          required
           value={formData.date_prise_rdv}
           onChange={handleInputChange}
           min={formattedNow}
           max={formattedMax}
-          className="w-full border p-2 rounded"
+          className="w-full border p-2 rounded bg-white text-black"
         />
+      </div>
+      <div className="mt-4">
+        <label className="block mb-1 font-semibold">
+          Centre de rendez-vous *
+        </label>
+        <select
+          name="centre"
+          required
+          value={formData.centre}
+          onChange={handleInputChange}
+          className="w-full border p-2 rounded bg-white text-black"
+        >
+          <option value="">-- Sélectionnez un centre --</option>
+          {[
+            "CIERA ABIDJAN",
+            "CIERA Korogho",
+            "CIERA Yakro",
+            "CIERA Bingerville",
+          ].map((centre) => (
+            <option key={centre} value={centre}>
+              {centre}
+            </option>
+          ))}
+        </select>
       </div>
 
       <button

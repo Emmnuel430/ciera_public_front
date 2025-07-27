@@ -35,7 +35,7 @@ export default function PageSidebarRDVLayout({ page }) {
       {/* Section prise de RDV avec layout 2 colonnes */}
       <div className="flex flex-col lg:flex-row gap-8 px-6 py-16 bg-white">
         {/* Partie gauche : contenu (60%) */}
-        <div className="lg:w-[55%]">
+        <div className="lg:w-[55%] mt-20">
           <h2 className="text-3xl font-bold mb-6 text-gray-800">
             {contentSection.title}
           </h2>
@@ -43,7 +43,10 @@ export default function PageSidebarRDVLayout({ page }) {
             {contentSection.subsections?.map((sub) => (
               <div key={sub.id}>
                 <h3 className="text-xl font-semibold mb-2">{sub.title}</h3>
-                <div className="text-gray-700">{sub.content}</div>
+                <div
+                  className="text-gray-700 "
+                  dangerouslySetInnerHTML={{ __html: sub.content }}
+                />
               </div>
             ))}
           </div>
