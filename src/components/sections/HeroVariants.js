@@ -90,33 +90,46 @@ export function HeroDefault({ section }) {
  */
 // -----------------------
 export function HeroMinimal({ section }) {
+  const bgImage = `${process.env.REACT_APP_API_BASE_URL_STORAGE}/${section.image}`;
   return (
-    <section className="bg-gradient-to-br from-white to-gray-100 text-gray-900 py-24 px-6 md:px-12 text-center">
-      <div className="max-w-4xl mx-auto">
-        {section.title && (
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
-            {section.title}
-          </h1>
-        )}
-        {section.subtitle && (
-          <h2 className="text-lg md:text-xl mb-4 text-gray-600">
-            {section.subtitle}
-          </h2>
-        )}
-        {section.content && (
-          <p className="text-md md:text-lg mb-6 text-gray-700">
-            {section.content}
-          </p>
-        )}
-        {section.button_text && section.button_link && (
-          <a
-            href={section.button_link}
-            className="inline-block px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold rounded shadow transition duration-300"
-          >
-            {section.button_text}
-          </a>
-        )}
-      </div>
+    <section
+      className="relative text-white  h-[60vh] py-24 px-6 md:px-12 text-center"
+      style={{
+        backgroundImage: section.image ? `url(${bgImage})` : "none",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      {/* Overlay sombre */}
+      {section.image && <div className="absolute inset-0 bg-black/40 z-0" />}
+
+      {/* Contenu */}
+      {/* <div className="relative z-10 max-w-4xl mx-auto">
+    {section.title && (
+      <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
+        {section.title}
+      </h1>
+    )}
+    {section.subtitle && (
+      <h2 className="text-lg md:text-xl mb-4 text-gray-200">
+        {section.subtitle}
+      </h2>
+    )}
+    {section.content && (
+      <p className="text-md md:text-lg mb-6 text-gray-300">
+        {section.content}
+      </p>
+    )}
+    {section.button_text && section.button_link && (
+      <a
+        href={section.button_link}
+        className="inline-block px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold rounded shadow transition duration-300"
+      >
+        {section.button_text}
+      </a>
+    )}
+  </div> */}
     </section>
   );
 }

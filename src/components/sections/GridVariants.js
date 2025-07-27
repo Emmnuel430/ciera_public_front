@@ -35,7 +35,10 @@ export const GridColumns = ({ section }) => (
             </div>
           )}
           <h3 className="text-xl font-semibold text-gray-800">{item.title}</h3>
-          <p className="mt-3 text-gray-600">{item.content}</p>
+          <div
+            className="text-gray-600 mt-3"
+            dangerouslySetInnerHTML={{ __html: item.content }}
+          />
         </div>
       ))}
     </div>
@@ -54,9 +57,10 @@ export const GridIcons = ({ section }) => (
           <h1 className="font-bold mb-4">{section.subtitle}</h1>
         )}
         {section.content && (
-          <p className="text-gray-700 mb-6 leading-relaxed">
-            {section.content}
-          </p>
+          <div
+            className="text-gray-700 mb-6 leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: section.content }}
+          />
         )}
         {/* {section.image && (
           <img
@@ -97,8 +101,12 @@ export const GridIcons = ({ section }) => (
                 <p className="text-sm text-gray-500">{item.subtitle}</p>
               )}
               {item.content && (
-                <p className="text-gray-600 mt-2 text-sm">{item.content}</p>
+                <div
+                  className="text-gray-600 mt-2 text-sm"
+                  dangerouslySetInnerHTML={{ __html: item.content }}
+                />
               )}
+
               {item.button_text && item.button_link && (
                 <a
                   href={item.button_link}
@@ -143,7 +151,10 @@ export const GridCards = ({ section }) => (
               <h3 className="text-2xl font-semibold text-gray-800">
                 {item.title}
               </h3>
-              <p className="mt-2 text-gray-600">{item.content}</p>
+              <div
+                className="text-gray-600 mt-2"
+                dangerouslySetInnerHTML={{ __html: item.content }}
+              />
             </div>
             {item.button_text && item.button_link && (
               <a
@@ -160,6 +171,39 @@ export const GridCards = ({ section }) => (
   </section>
 );
 
+export const GridThreeIcon = ({ section }) => {
+  return (
+    <section className="py-20 bg-white px-6 md:px-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        {section.subsections.map((item, index) => (
+          <div
+            key={index}
+            className="flex flex-col items-center text-center p-6 border rounded-xl shadow-sm hover:shadow-lg transition"
+          >
+            {item.icon && (
+              <div className="text-4xl text-orange-600 mb-4">
+                <i className={item.icon}></i>
+              </div>
+            )}
+            <h3 className="text-xl font-semibold text-gray-800">
+              {item.title}
+            </h3>
+            {item.subtitle && (
+              <p className="text-sm text-gray-500 mt-1">{item.subtitle}</p>
+            )}
+            {item.content && (
+              <div
+                className="mt-2 text-gray-600 text-sm"
+                dangerouslySetInnerHTML={{ __html: item.content }}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
 export const GridSplit = ({ section }) => {
   return (
     <section className="py-16 px-6 md:px-12 bg-white text-gray-800">
@@ -173,9 +217,10 @@ export const GridSplit = ({ section }) => {
             <h1 className="font-bold mb-4">{section.subtitle}</h1>
           )}
           {section.content && (
-            <p className="text-gray-700 mb-6 leading-relaxed">
-              {section.content}
-            </p>
+            <div
+              className="text-gray-700 mb-6 leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: section.content }}
+            />
           )}
           {section.image && (
             <img
@@ -217,7 +262,10 @@ export const GridSplit = ({ section }) => {
                   <p className="text-sm text-gray-500">{item.subtitle}</p>
                 )}
                 {item.content && (
-                  <p className="text-gray-300 mt-2 text-sm">{item.content}</p>
+                  <div
+                    className="text-gray-300 mt-2 text-sm"
+                    dangerouslySetInnerHTML={{ __html: section.content }}
+                  />
                 )}
                 {item.button_text && item.button_link && (
                   <a
@@ -251,9 +299,10 @@ export const GridSplitDark = ({ section }) => {
             <h1 className="font-bold mb-4">{section.subtitle}</h1>
           )}
           {section.content && (
-            <p className="text-gray-700 mb-6 leading-relaxed">
-              {section.content}
-            </p>
+            <div
+              className="text-gray-700 mb-6 leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: section.content }}
+            />
           )}
           {section.image &&
             (isVideo ? (
@@ -312,7 +361,10 @@ export const GridSplitDark = ({ section }) => {
                   <p className="text-sm text-gray-500">{item.subtitle}</p>
                 )}
                 {item.content && (
-                  <p className="text-gray-300 mt-2 text-sm">{item.content}</p>
+                  <div
+                    className="text-gray-300 mt-2 text-sm"
+                    dangerouslySetInnerHTML={{ __html: item.content }}
+                  />
                 )}
                 {item.button_text && item.button_link && (
                   <a
@@ -345,7 +397,8 @@ export const GridSections = ({ section }) => (
         <div key={index} className="p-6">
           <div className="flex justify-between items-center gap-4 p-4">
             <h1 className="text-5xl font-bold me-2 w-1/2 flex">
-              <span className="hidden lg:block">+</span> {item.content}
+              <span className="hidden lg:block">+</span>
+              <div dangerouslySetInnerHTML={{ __html: item.content }} />
             </h1>
             <h4 className="w-1/2">{item.title}</h4>
           </div>

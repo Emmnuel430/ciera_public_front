@@ -1,64 +1,81 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export const CtaCentered = ({ section }) => (
   <section className="py-20 px-6 md:px-12 bg-green-900 text-white text-center">
     <h2 className="text-3xl font-bold mb-4 capitalize">{section.title}</h2>
     {section.subtitle && <p className="mb-6 text-lg">{section.subtitle}</p>}
     {section.button_text && section.button_link && (
-      <a
-        href={section.button_link}
-        className="inline-block bg-orange-700 text-white px-6 py-3 font-semibold rounded shadow hover:bg-gray-100"
+      <Link
+        to={section.button_link || ""}
+        className="inline-block bg-orange-700 text-white px-6 py-3 font-semibold rounded shadow hover:bg-orange-500"
       >
         {section.button_text}
-      </a>
+      </Link>
     )}
   </section>
 );
 
-export const CtaSplit = ({ section }) => (
-  <section
-    className="relative py-16 px-6 md:px-12 bg-orange-700 text-white"
-    style={{
-      backgroundImage: section.image
-        ? `url(${process.env.REACT_APP_API_BASE_URL_STORAGE}/${section.image})`
-        : "none",
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-    }}
-  >
-    {section.image && (
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm z-0" />
-    )}{" "}
-    <div className="relative grid md:grid-cols-2 gap-10 items-center">
-      <div>
-        <h2 className="text-3xl font-bold mb-4 text-center">{section.title}</h2>
-        {section.subtitle && (
-          <p className="text-gray-200 mb-4">{section.subtitle}</p>
-        )}
-        {section.content && (
-          <p className="text-gray-200 mb-6">{section.content}</p>
-        )}
-        {section.button_text && section.button_link && (
-          <a
-            href={section.button_link}
-            className="inline-block bg-orange-600 text-white px-10 py-3 font-semibold rounded rounded-10 shadow hover:bg-orange-700"
-          >
-            {section.button_text}
-          </a>
+export const CtaSplit = ({ section }) => {
+  const isVideo = /\.(mp4|webm|ogg)$/i.test(section.image);
+  return (
+    <section
+      className="relative py-16 px-6 md:px-12 bg-orange-700 text-white"
+      style={{
+        backgroundImage: section.image
+          ? `url(${process.env.REACT_APP_API_BASE_URL_STORAGE}/${section.image})`
+          : "none",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      {section.image && (
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm z-0" />
+      )}{" "}
+      <div className="relative grid md:grid-cols-2 gap-10 items-center">
+        <div>
+          <h2 className="text-3xl font-bold mb-4 text-center">
+            {section.title}
+          </h2>
+          {section.subtitle && (
+            <p className="text-gray-200 mb-4">{section.subtitle}</p>
+          )}
+          {section.content && (
+            <p className="text-gray-200 mb-6">{section.content}</p>
+          )}
+          {section.button_text && section.button_link && (
+            <a
+              href={section.button_link}
+              className="inline-block bg-orange-600 text-white px-10 py-3 font-semibold rounded rounded-10 shadow hover:bg-orange-700"
+            >
+              {section.button_text}
+            </a>
+          )}
+        </div>
+        {section.image_mobile && (
+          <div className="w-full">
+            {isVideo ? (
+              <video
+                src={`${process.env.REACT_APP_API_BASE_URL_STORAGE}/${section.image_mobile}`}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="mb-6 w-full h-80 object-contain rounded shadow"
+              />
+            ) : (
+              <img
+                src={`${process.env.REACT_APP_API_BASE_URL_STORAGE}/${section.image_mobile}`}
+                alt={section.title}
+                className="rounded-lg w-full h-auto object-cover"
+              />
+            )}
+          </div>
         )}
       </div>
-      {section.image_mobile && (
-        <div className="w-full">
-          <img
-            src={`${process.env.REACT_APP_API_BASE_URL_STORAGE}/${section.image_mobile}`}
-            alt={section.title}
-            className="rounded-lg w-full h-auto object-cover"
-          />
-        </div>
-      )}
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 export function CtaAppDownload({ section }) {
   return (
@@ -171,7 +188,7 @@ export function CtaContact({ section }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Données envoyées :", formData);
+    // console.log("Données envoyées :", formData);
   };
 
   return (
@@ -179,7 +196,7 @@ export function CtaContact({ section }) {
       {section.title && (
         <h2 className="text-3xl font-bold mb-6 text-center">{section.title}</h2>
       )}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center py-20">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center py-20">
         {/* Gauche : Liste des sous-sections */}
         <div>
           <ul className="space-y-4">
@@ -188,12 +205,15 @@ export function CtaContact({ section }) {
                 <div className="w-10 h-10 flex items-center justify-center rounded bg-orange-700 text-white text-lg shadow">
                   <i className={`fas ${item.icon || "fa-map-marker-alt"}`}></i>
                 </div>
-                <div>
+                <div className="w-[80%]">
                   <h4 className="font-semibold text-orange-600">
                     {item.title}
                   </h4>
                   {item.content && (
-                    <h4 className="text-green-700 font-bold">{item.content}</h4>
+                    <div
+                      className="text-xl text-green-700 font-bold"
+                      dangerouslySetInnerHTML={{ __html: item.content }}
+                    />
                   )}
                 </div>
               </li>

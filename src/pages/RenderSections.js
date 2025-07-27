@@ -20,6 +20,7 @@ import {
   TwoCardsGrid,
   CategoryGrid,
   LatestProductsGrid,
+  GridThreeIcon,
 } from "../components/sections/GridVariants";
 import { FaqAccordion, FaqList } from "../components/sections/FaqVariants";
 import {
@@ -32,6 +33,7 @@ import {
 import {
   CarouselSimple,
   CarouselWithCaptions,
+  CarouselYTB,
 } from "../components/sections/CarouelsVariants";
 
 // Fonction d'affichage selon le type + variant
@@ -54,6 +56,7 @@ export function RenderSection(section) {
       columns: GridColumns,
       icons: GridIcons,
       cards: GridCards,
+      "three-icons": GridThreeIcon,
       split: GridSplit,
       "split-dark": GridSplitDark,
       sections: GridSections,
@@ -70,6 +73,7 @@ export function RenderSection(section) {
     },
     carousel: {
       simple: CarouselSimple,
+      link: CarouselYTB,
       "with-captions": CarouselWithCaptions,
     },
     faq: {
